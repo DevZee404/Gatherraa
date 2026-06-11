@@ -1,6 +1,6 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, contracterror, Env, Address, BytesN, Vec};
+use soroban_sdk::{contract, contracterror, contractimpl, Address, BytesN, Env, Vec};
 
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -25,7 +25,11 @@ pub struct CrossContractContract;
 
 #[contractimpl]
 impl CrossContractContract {
-    pub fn send_message(env: Env, target_chain: BytesN<32>, payload: Vec<u8>) -> Result<u64, CrossContractError> {
+    pub fn send_message(
+        env: Env,
+        target_chain: BytesN<32>,
+        payload: Vec<u8>,
+    ) -> Result<u64, CrossContractError> {
         let _ = (env, target_chain, payload);
         Err(CrossContractError::NotImplemented)
     }
