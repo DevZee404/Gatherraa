@@ -27,7 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: package-lock.json
+        cache-dependency-path: tests/integration/package-lock.json
 
     - name: Install Rust stable toolchain
       uses: dtolnay/rust-toolchain@stable
@@ -36,13 +36,16 @@ jobs:
       run: rustup target add wasm32-unknown-unknown
 
     - name: Install dependencies
-      run: npm ci --workspaces
+      working-directory: tests/integration
+      run: npm ci
 
     - name: Compile contracts
-      run: npm run build:contracts
+      working-directory: tests/integration
+      run: npm run build
 
     - name: Run integration tests
-      run: npm run test:integration
+      working-directory: tests/integration
+      run: npm test
       timeout-minutes: 30
 
     - name: Upload test results
@@ -63,13 +66,15 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
-        cache-dependency-path: package-lock.json
+        cache-dependency-path: tests/integration/package-lock.json
 
     - name: Install dependencies
-      run: npm ci --workspaces
+      working-directory: tests/integration
+      run: npm ci
 
     - name: Generate coverage report
-      run: npm --workspace tests/integration run test:coverage || echo "Coverage generation failed - continuing..."
+      working-directory: tests/integration
+      run: npm run test:coverage || echo "Coverage generation failed - continuing..."
       timeout-minutes: 30
 
     - name: Upload coverage to Codecov
@@ -92,11 +97,13 @@ jobs:
       with:
         node-version: 20.x
         cache: 'npm'
-        cache-dependency-path: package-lock.json
+        cache-dependency-path: tests/integration/package-lock.json
 
     - name: Install dependencies
-      run: npm ci --workspaces
+      working-directory: tests/integration
+      run: npm ci
 
     - name: Run linter
-      run: npm --workspace tests/integration run test:lint || echo "Linting failed - continuing..."
+      working-directory: tests/integration
+      run: npm run test:lint || echo "Linting failed - continuing..."
       timeout-minutes: 15
